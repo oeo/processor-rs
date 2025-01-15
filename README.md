@@ -6,19 +6,28 @@ A high-performance document processing pipeline written in Rust that supports mu
 
 - Multi-format document processing:
   - Text files (txt, csv)
-  - Office documents (docx, rtf, xlsx, pptx)
-  - PDF files
-  - Images (jpg, png, gif, bmp, tiff, webp, heic)
+  - Office documents (docx, xlsx, pptx)
+  - PDF files with advanced rendering
+  - Images (jpg, png, gif, bmp, tiff, webp)
   - Spreadsheets (csv, xls, xlsx)
 
 - Advanced Processing Capabilities:
   - Text extraction from various document formats
   - OCR (Optical Character Recognition) for images and scanned documents
   - Spreadsheet data parsing and formatting
-  - Image optimization and compression
-  - PDF text extraction and image conversion
+  - PDF processing with 1.5x render scale for optimal quality
   - Intelligent text quality assessment
   - Advanced OCR filtering and validation
+
+- Performance Optimizations:
+  - Parallel image processing using rayon
+  - Pre-allocated buffers with exact capacity
+  - Single-pass pixel processing
+  - Efficient alpha blending with white background
+  - Fast image resizing using Triangle filter
+  - Memory-efficient buffer reuse
+  - Optimized PDF to image conversion
+  - Smart page selection for large documents
 
 - Quality Control Features:
   - Comprehensive OCR quality validation:
@@ -36,7 +45,7 @@ A high-performance document processing pipeline written in Rust that supports mu
     - Special character cleanup
     - Artifact removal
 
-- Performance Features:
+- Architecture Features:
   - Async processing pipeline
   - Configurable memory limits
   - Multi-threaded processing
@@ -74,26 +83,41 @@ The processor supports various configuration options:
 
 Basic usage through command line:
 ```bash
-./preprocess-document run <infile> [options]
+processor-rs run <infile> [options]
 
 Options:
-  --uncompressed        Disable image compression
+  --format <format>     Output format (json, html, protobuf)
   --config <file>       Use custom config file
   --temp-dir <dir>      Specify temporary directory
   --keep-temps          Keep temporary files
-  --verbose             Enable verbose logging
-  --max-memory <mb>     Set maximum memory usage
-  --timeout <seconds>   Set processing timeout
+  --verbose            Enable verbose logging
+  --max-memory <mb>    Set maximum memory usage
+  --timeout <seconds>  Set processing timeout
 ```
 
-## Output Format
+## Output Formats
 
-The processor generates structured output including:
+The processor supports multiple output formats:
+
+### JSON
+Structured output including:
 - Extracted text with quality metrics
 - OCR results with confidence scores
 - Optimized image attachments
 - Processing metadata and timing information
 - Error and warning logs
+
+### HTML
+Clean, minimal visualization with:
+- 13px monospace font throughout
+- Scrollable text sections
+- Right-aligned content
+- Optimized image display
+- Processing metadata
+- Clear section separation
+
+### Protobuf
+Binary format for efficient machine processing.
 
 ## Error Handling
 
@@ -103,6 +127,8 @@ The processor includes comprehensive error handling for:
 - Memory constraints
 - Timeout conditions
 - File system errors
+- Buffer size mismatches
+- Image conversion issues
 
 ## API Usage
 
@@ -123,9 +149,13 @@ async fn process_document() {
     // Process document
     let mut query = Query {
         file_path: "document.pdf".to_string(),
-        file_type: "application/pdf".to_string(),
+        file_type: "pdf".to_string(),
         strategy: Strategy::PDF.to_string(),
-        // ... additional query parameters
+        prompt_parts: Vec::new(),
+        attachments: Vec::new(),
+        system: "You are a helpful assistant.".to_string(),
+        prompt: String::new(),
+        metadata: Some(QueryMetadata::default()),
     };
 
     let result = processor.process(&mut query).await.unwrap();
@@ -137,9 +167,7 @@ async fn process_document() {
 | Category | Extensions |
 |----------|------------|
 | Text | txt, csv |
-| Office | doc, docx, docm, odt, rtf |
-| Spreadsheets | xls, xlsx, xlsm, ods |
-| Presentations | ppt, pptx, pptm, odp |
-| Web | html, htm |
-| Images | bmp, gif, jpg, jpeg, png, tiff, tif, webp, heic, heif |
+| Office | docx, xlsx |
+| Spreadsheets | xls, xlsx |
+| Images | bmp, gif, jpg, jpeg, png, tiff, webp |
 | PDF | pdf |
