@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package processor;
+
+message Query {
+  string file_type = 1;
+  string file_path = 2;
+  string strategy = 3;
+  repeated string prompt_parts = 4;
+  repeated Attachment attachments = 5;
+  string system = 6;
+  string prompt = 7;
+  QueryMetadata metadata = 8;
+}
+
+message Attachment {
+  int32 page = 1;
+  bytes data = 2;
+}
+
+message QueryMetadata {
+  int64 started_at = 1;
+  int64 completed_at = 2;
+  int64 total_duration_ms = 3;
+  int64 original_file_size = 4;
+  repeated string errors = 5;
+  repeated ProcessingStep steps = 6;
+}
+
+message ProcessingStep {
+  string name = 1;
+  int64 duration_ms = 2;
+  string status = 3;
+  int64 memory_mb = 4;
+} 
