@@ -14,7 +14,6 @@ use crate::processor::{
     format_extracted_data,
     format_ocr_data,
     optimize_image,
-    optimize_image_for_ocr,
     clean_text,
     select_pages_to_process,
     is_meaningful_text

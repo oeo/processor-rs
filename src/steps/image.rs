@@ -79,5 +79,3 @@ impl ProcessingStep for ImageProcessor {
         "image_processor"
     }
 }
-
-// ... existing code ... 
