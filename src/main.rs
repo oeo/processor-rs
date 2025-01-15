@@ -7,9 +7,21 @@ use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use chrono::{DateTime, Utc};
 
 use processor_rs::{
-    Config, Strategy, QueryOutput, Processor,
-    steps::{TextProcessor, SpreadsheetProcessor, PDFProcessor, OfficeProcessor, ImageProcessor},
-    proto::processor::{Query, QueryMetadata},
+    Config,
+    Strategy,
+    QueryOutput,
+    Processor,
+    steps::{
+        TextProcessor,
+        SpreadsheetProcessor,
+        PDFProcessor,
+        OfficeProcessor,
+        ImageProcessor
+    },
+    proto::processor::{
+        Query,
+        QueryMetadata
+    },
 };
 
 #[derive(Debug, Clone, ValueEnum)]

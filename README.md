@@ -109,12 +109,9 @@ Structured output including:
 
 ### HTML
 Clean, minimal visualization with:
-- 13px monospace font throughout
-- Scrollable text sections
-- Right-aligned content
-- Optimized image display
+- Extracted text content
+- Image previews
 - Processing metadata
-- Clear section separation
 
 ### Protobuf
 Binary format for efficient machine processing.
